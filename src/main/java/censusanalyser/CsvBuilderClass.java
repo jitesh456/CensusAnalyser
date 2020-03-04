@@ -5,14 +5,27 @@ import com.opencsv.bean.CsvToBeanBuilder;
 
 import java.io.Reader;
 import java.util.Iterator;
-import java.util.stream.StreamSupport;
+import java.util.List;
 
-public class CsvBuilderClass {
-    public   <E> Iterator<E> getIndiaCensusCSVIterator(Reader reader, Class csvType) {
+public  class CsvBuilderClass <E>implements ICsvBuilder  {
+    public    Iterator<E> getIndiaCensusCSVIterator(Reader reader, Class csvType) throws CsvBuilderException {
+        try {
+            return getCsvBean(reader,csvType).iterator();
+        }
+        catch (IllegalStateException e) {
+            throw new CsvBuilderException(e.getMessage(),CsvBuilderException.ExceptionType.UNABLE_TO_PARSE);
+        }
+    }
+    @Override
+    public List getIndiaCensusCSVList(Reader reader, Class csvType) throws CsvBuilderException {
+        return getCsvBean(reader,csvType).parse();
+    }
+
+    public CsvToBean<E> getCsvBean(Reader reader,Class csvClass) {
         CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
-        csvToBeanBuilder.withType(csvType);
+        csvToBeanBuilder.withType(csvClass);
         csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
         CsvToBean<E> csvToBean = csvToBeanBuilder.build();
-        return csvToBean.iterator();
+        return  csvToBean;
     }
 }

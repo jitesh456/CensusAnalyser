@@ -14,17 +14,17 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.StreamSupport;
 
 public class CensusAnalyser {
-    CsvBuilderClass csvBuilderClass=new CsvBuilderClass();
+    ICsvBuilder iCsvBuilder=CsvBuilderFactory.getObject();
     public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
-
 
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));){
 
-            Iterator<IndiaCensusCSV> censusCSVIterator = csvBuilderClass.getIndiaCensusCSVIterator(reader,IndiaCensusCSV.class);
-            return getCount(censusCSVIterator);
+            List<IndiaCensusCSV> censusCSVList = iCsvBuilder.getIndiaCensusCSVList(reader,IndiaCensusCSV.class);
+            return censusCSVList.size();
 
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
@@ -42,7 +42,7 @@ public class CensusAnalyser {
 
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));){
 
-            Iterator<IndiaStateCodeCSV> censusCSVIterator =csvBuilderClass.getIndiaCensusCSVIterator(reader,IndiaStateCodeCSV.class);
+            Iterator<IndiaStateCodeCSV> censusCSVIterator =iCsvBuilder.getIndiaCensusCSVIterator(reader,IndiaStateCodeCSV.class);
             return getCount(censusCSVIterator);
 
         } catch (IOException e) {
