@@ -1,5 +1,6 @@
 package censusanalyser;
 
+import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -52,6 +53,21 @@ public class CensusAnalyserTest {
             censusAnalyser.loadIndiaCensusData(WRONG_FILE_DELIMETER);
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(CensusAnalyserException.ExceptionType.WRONG_DELIMETER,e.type);
+        }
+    }
+
+    @Test
+    public void givenIndainCsvData_WhenSortedOnState_ShouldReturnSortedResult() {
+        try {
+
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
+            String stateWiseSortedCensusData = censusAnalyser.getStateWiseSortedCensusData();
+            IndiaCensusCSV[] indiaCensusCSVS = new Gson().fromJson(stateWiseSortedCensusData, IndiaCensusCSV[].class);
+            Assert.assertEquals("Andhra Pradesh", indiaCensusCSVS[0].state);
+        }catch (CensusAnalyserException e)
+        {
+
         }
     }
 }

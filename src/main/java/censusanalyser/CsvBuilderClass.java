@@ -17,7 +17,7 @@ public  class CsvBuilderClass <E>implements ICsvBuilder  {
         }
     }
     @Override
-    public List getIndiaCensusCSVList(Reader reader, Class csvType) throws CsvBuilderException {
+    public List<E> getIndiaCensusCSVList(Reader reader, Class csvType) throws CsvBuilderException {
         return getCsvBean(reader,csvType).parse();
     }
 
