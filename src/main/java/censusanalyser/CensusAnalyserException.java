@@ -1,10 +1,9 @@
 package censusanalyser;
 
-public class CensusAnalyserException extends Exception {
+public class CensusAnalyserException extends RuntimeException {
 
     enum ExceptionType {
-        CENSUS_FILE_PROBLEM, WRONG_DELIMETER,
-
+        UNABLE_TO_PARSE, DELIMETER_EXCEPTION, NO_CENSUS_DATA, CENSUS_FILE_PROBLEM
     }
 
     ExceptionType type;
