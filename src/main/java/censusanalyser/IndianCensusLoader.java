@@ -10,11 +10,29 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class CensusCSVLoad {
+public class IndianCensusLoader extends CensusAdapter {
 
     Map<String, CensusDTO> censusMap=null;
     List<CensusDTO> censusDTOList=null;
-    public  <E> Map<String, CensusDTO> loadCensusData(Class<E> csvClass, String... csvFilePath) {
+    @Override
+    public Map<String, CensusDTO> loadCensusData(String... csvFilePath) {
+        censusMap = super.loadCensusData(IndiaCensusCSV.class, csvFilePath[0]);
+        this.loadIndianStateCodeData(censusMap,csvFilePath[1]);
+        return censusMap;
+    }
+   /* public  Map<String, CensusDTO> loadCensusData(CensusAnalyser.Country country, String... csvFilePath) {
+        if(country.equals(CensusAnalyser.Country.INDIA))
+        {
+            return this.loadCensusData(IndiaCensusCSV.class ,csvFilePath);
+        }
+        else if(country.equals(CensusAnalyser.Country.US))
+        {
+            return this.loadCensusData(USCensusCSV.class ,csvFilePath);
+        }
+        else
+            throw new CensusAnalyserException("Wrong class name",CensusAnalyserException.ExceptionType.INVALID_CLASS);
+    }
+    private  <E> Map<String, CensusDTO> loadCensusData(Class<E> csvClass, String... csvFilePath) {
         censusMap=new HashMap<>();
         censusDTOList=new ArrayList<>();
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath[0]))) {
@@ -40,7 +58,7 @@ public class CensusCSVLoad {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
-    }
+    }*/
     private int loadIndianStateCodeData(Map<String, CensusDTO> censusMap, String csvFilePath) throws CensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
@@ -65,6 +83,7 @@ public class CensusCSVLoad {
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
     }
+
 
 
 }
